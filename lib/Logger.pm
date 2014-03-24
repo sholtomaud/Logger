@@ -50,6 +50,7 @@ Code snippet.
  has 'errmsg' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'script' => ( is => 'rw', isa => 'Str'); 
  has 'comment' => ( is => 'rw', isa => 'Str'); 
+ has 'user' => ( is => 'rw', isa => 'Str'); 
  
 =head1 EXPORT
 
@@ -81,11 +82,12 @@ sub log{
     Date      TEXT, 
     Time      TEXT, 
     Script    TEXT,
+    User      TEXT,
     $primary_key
   )");
     
-  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
-  my @values = ($self->station, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->script );
+  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+  my @values = ($self->station, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->script, $self->user );
   $sth->execute(@values) or die return $sth->errstr;
   $dbh->commit;  
   $dbh->disconnect();
