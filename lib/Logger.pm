@@ -4,6 +4,7 @@ use Moose;
 use DBI;
 use JSON;
 use DateTime;
+use Env;
 
 =head1 NAME
 
@@ -50,7 +51,7 @@ Code snippet.
  has 'errmsg' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'script' => ( is => 'rw', isa => 'Str'); 
  has 'comment' => ( is => 'rw', isa => 'Str'); 
- has 'user' => ( is => 'rw', isa => 'Str'); 
+ has 'user' => ( is => 'rw', isa => 'Str', default => $ENV{'USERNAME'} ); 
  
 =head1 EXPORT
 
