@@ -55,7 +55,9 @@ Code snippet.
  
 =head1 EXPORT
 
+log()
 log_hash()
+dev_log()
 
 =head1 SUBROUTINES/METHODS
 
@@ -89,6 +91,41 @@ sub log{
     
   my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )");
   my @values = ($self->station, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->script, $self->user );
+  $sth->execute(@values) or die return $sth->errstr;
+  $dbh->commit;  
+  $dbh->disconnect();
+  return 1;    
+}
+
+=head2 new()
+  Creates a logging database for tracking development 
+=cut
+
+sub dev_log{
+  my $self = shift;
+  my $sqlite3path = $self->logpath.'Chromicon\\DevLog.db';
+  my $dbh = DBI->connect(          
+      "dbi:SQLite:dbname=$sqlite3path", 
+      "",                          
+      "",                          
+      { RaiseError => 1, AutoCommit => 0},         
+  ) or die print $DBI::errstr;
+  
+  my $primary_key = 'PRIMARY KEY (Script, Date, Time, Keyword)';
+  $dbh->do("CREATE TABLE IF NOT EXISTS LOG(
+    Script    TEXT,
+    Keyword   TEXT, 
+    Status    TEXT, 
+    Comment   TEXT, 
+    Errmsg    TEXT,
+    Date      TEXT, 
+    Time      TEXT, 
+    User      TEXT,
+    $primary_key
+  )");
+    
+  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
+  my @values = ($self->script, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->user );
   $sth->execute(@values) or die return $sth->errstr;
   $dbh->commit;  
   $dbh->disconnect();
