@@ -6,9 +6,9 @@ use JSON;
 use DateTime;
 use Env;
 
-=head1 NAME
+=head1 Logger
 
-Logger - Custom logger module for import and export scripts
+Custom logger module for import and export scripts
 
 =head1 VERSION
 
@@ -21,13 +21,13 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Use this module to log a transaction to a specified database location
+Use this module to log a transaction to a database location specified by logpath
 
 Code snippet.
 
-    use Logger;
-    
-    my $logger = Logger->new( 
+  use Logger;
+  
+  my $logger = Logger->new( 
     logpath=> $log_path,
     station => $site,
     date    => substr (NowString(), 0, 8 ),
@@ -36,10 +36,10 @@ Code snippet.
     status  => $status,
     keyword => $keyword,
     errmsg  => $errmsg
-    );
-    $logger->log;
-  
-    my $all = $logger->log_hash(logpath=>$log_path);
+  );
+
+  $logger->log;
+     
 =cut
 
  has 'station' => ( is => 'rw', isa => 'Str', required => 1); 
@@ -55,15 +55,15 @@ Code snippet.
  
 =head1 EXPORTS
 
-> log()
-> log_hash()
-> dev_log()
+  > log()
+  > log_hash()
+  > dev_log()
 
 =head1 SUBROUTINES/METHODS
 
 =head2 log()
   
-  Create a STATION-based log entry.
+Create a STATION-based log entry.
 
 =cut
 
@@ -101,7 +101,7 @@ sub log{
 
 =head2 dev_log()
   
-  Creates a logging database for tracking development of scripts
+Creates a logging database for tracking development of scripts
 
 =cut
 

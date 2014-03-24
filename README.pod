@@ -1,6 +1,6 @@
-=head1 NAME
+=head1 Logger
 
-Logger - Custom logger module for import and export scripts
+Custom logger module for import and export scripts
 
 =head1 VERSION
 
@@ -8,13 +8,13 @@ Version 0.10
 
 =head1 SYNOPSIS
 
-Use this module to log a transaction to a specified database location
+Use this module to log a transaction to a database location specified by logpath
 
 Code snippet.
 
-    use Logger;
-    
-    my $logger = Logger->new( 
+  use Logger;
+  
+  my $logger = Logger->new( 
     logpath=> $log_path,
     station => $site,
     date    => substr (NowString(), 0, 8 ),
@@ -23,38 +23,25 @@ Code snippet.
     status  => $status,
     keyword => $keyword,
     errmsg  => $errmsg
-    );
-    $logger->log;
-  
-    my $all = $logger->log_hash(logpath=>$log_path);
-=cut
+  );
 
- has 'station' => ( is => 'rw', isa => 'Str', required => 1); 
- has 'keyword' => ( is => 'rw', isa => 'Str', required => 1); 
- has 'logpath' => ( is => 'rw', isa => 'Str', required => 1); 
- has 'status'  => ( is => 'rw', isa => 'Str'); 
- has 'date'  => ( is => 'rw', isa => 'Num'); 
- has 'time'  => ( is => 'rw', isa => 'Num'); 
- has 'errmsg' => ( is => 'rw', isa => 'Str', required => 1); 
- has 'script' => ( is => 'rw', isa => 'Str'); 
- has 'comment' => ( is => 'rw', isa => 'Str'); 
- has 'user' => ( is => 'rw', isa => 'Str', default => $ENV{'USERNAME'} ); 
- 
+  $logger->log;
+     
 =head1 EXPORTS
 
-> log()
-> log_hash()
-> dev_log()
+  > log()
+  > log_hash()
+  > dev_log()
 
 =head1 SUBROUTINES/METHODS
 
 =head2 log()
   
-  Create a STATION-based log entry.
+Create a STATION-based log entry.
 
 =head2 dev_log()
   
-  Creates a logging database for tracking development of scripts
+Creates a logging database for tracking development of scripts
 
 =head2 log_hash
 
