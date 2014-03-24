@@ -53,16 +53,18 @@ Code snippet.
  has 'comment' => ( is => 'rw', isa => 'Str'); 
  has 'user' => ( is => 'rw', isa => 'Str', default => $ENV{'USERNAME'} ); 
  
-=head1 EXPORT
+=head1 EXPORTS
 
-log()
-log_hash()
-dev_log()
+> log()
+> log_hash()
+> dev_log()
 
 =head1 SUBROUTINES/METHODS
 
-=head2 new()
-  New instance of logger 
+=head2 log()
+  
+  Create a STATION-based log entry.
+
 =cut
 
 sub log{
@@ -97,8 +99,10 @@ sub log{
   return 1;    
 }
 
-=head2 new()
-  Creates a logging database for tracking development 
+=head2 dev_log()
+  
+  Creates a logging database for tracking development of scripts
+
 =cut
 
 sub dev_log{
