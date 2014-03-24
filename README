@@ -1,5 +1,7 @@
 Logger
 
+A simple Logger module recording db transactions in a SQLite db
+
 INSTALLATION
 
 To install this module, change directories into your hyd/dat/ini/chr folder
@@ -13,21 +15,6 @@ After installing, you can find documentation for this module with the
 perldoc command.
 
     perldoc Logger
-
-You can also look for information at:
-
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Logger
-
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Logger
-
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Logger
-
-    Search CPAN
-        http://search.cpan.org/dist/Logger/
-
 
 LICENSE AND COPYRIGHT
 
