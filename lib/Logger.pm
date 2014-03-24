@@ -84,7 +84,7 @@ sub log{
     $primary_key
   )");
     
-  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ? )");
+  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
   my @values = ($self->station, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->script );
   $sth->execute(@values) or die return $sth->errstr;
   $dbh->commit;  
