@@ -43,13 +43,12 @@ Code snippet.
   $logger->log;
      
 =cut
- my $defaultdb_dir = $Bin.'\\db\\';
- my $defaultdb = $defaultdb_dir.'\\Log.db';
+ my $defaultdb_dir = $Bin.'\\db';
  
  has 'station' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'keyword' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'logpath' => ( is => 'rw', isa => 'Str', required => 1, default => $defaultdb_dir); 
- has 'logdb' => ( is => 'rw', isa => 'Str', required => 1, default => $defaultdb); 
+ has 'logdb' => ( is => 'rw', isa => 'Str', required => 1, default => 'Log.db'); 
  has 'status'  => ( is => 'rw', isa => 'Str'); 
  has 'date'  => ( is => 'rw', isa => 'Num',  default => sub { ((localtime)[5] + 1900 ). (localtime)[4] . (localtime)[3] } ); 
  has 'time'  => ( is => 'rw', isa => 'Num', default => sub { (localtime)[2] . (localtime)[1] . (localtime)[0] }); 
@@ -81,7 +80,7 @@ sub log{
   else{  
     mkdir ($defaultdb_dir) if ( ! -d $defaultdb_dir );
   }  
-  my $db = $self->logdb;
+  my $db = $self->logpath.'\\'.$self->logdb;
   my $dbh = DBI->connect(          
       "dbi:SQLite:dbname=$db", 
       "",                          
@@ -120,13 +119,13 @@ Return a hash of all logs within the Sqlite database
 
 sub log_hash{
   my $self = shift;
-  if ( $defaultdb ne $self->logpath ) {
+  if ( $defaultdb_dir ne $self->logpath ) {
     mkdir ($self->logpath) if ( ! -d $self->logpath ) ;
   }
   else{  
     mkdir ($defaultdb_dir) if ( ! -d $defaultdb_dir );
-  }
-  my $db = $self->logdb;
+  }  
+  my $db = $self->logpath.'\\'.$self->logdb;
   my $dbh = DBI->connect(          
       "dbi:SQLite:dbname=$db", 
       "",                          
