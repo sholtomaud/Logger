@@ -1,3 +1,4 @@
+
 package Logger;
 use Moose;
 #use Moose::Util::TypeConstraints;
@@ -5,6 +6,7 @@ use DBI;
 use JSON;
 use DateTime;
 use Env;
+use FindBin qw($Bin);
 
 =head1 Logger
 
@@ -16,7 +18,7 @@ Version 0.10
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.10';
 
 
 =head1 SYNOPSIS
@@ -41,18 +43,22 @@ Code snippet.
   $logger->log;
      
 =cut
-
+ my $defaultdb_dir = $Bin.'\\db\\';
+ my $defaultdb = $defaultdb_dir.'\\Log.db';
+ 
  has 'station' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'keyword' => ( is => 'rw', isa => 'Str', required => 1); 
- has 'logpath' => ( is => 'rw', isa => 'Str', required => 1); 
+ has 'logpath' => ( is => 'rw', isa => 'Str', required => 1, default => $defaultdb_dir); 
+ has 'logdb' => ( is => 'rw', isa => 'Str', required => 1, default => $defaultdb); 
  has 'status'  => ( is => 'rw', isa => 'Str'); 
- has 'date'  => ( is => 'rw', isa => 'Num'); 
- has 'time'  => ( is => 'rw', isa => 'Num'); 
+ has 'date'  => ( is => 'rw', isa => 'Num',  default => sub { ((localtime)[5] + 1900 ). (localtime)[4] . (localtime)[3] } ); 
+ has 'time'  => ( is => 'rw', isa => 'Num', default => sub { (localtime)[2] . (localtime)[1] . (localtime)[0] }); 
  has 'errmsg' => ( is => 'rw', isa => 'Str', required => 1); 
  has 'script' => ( is => 'rw', isa => 'Str'); 
  has 'comment' => ( is => 'rw', isa => 'Str'); 
  has 'user' => ( is => 'rw', isa => 'Str', default => $ENV{'USERNAME'} ); 
  
+  
 =head1 EXPORTS
 
   > log()
@@ -69,9 +75,15 @@ Create a STATION-based log entry.
 
 sub log{
   my $self = shift;
-  my $sqlite3path = $self->logpath.'Chromicon\\Log.db';
+  if ( $defaultdb_dir ne $self->logpath ) {
+    mkdir ($self->logpath) if ( ! -d $self->logpath ) ;
+  }
+  else{  
+    mkdir ($defaultdb_dir) if ( ! -d $defaultdb_dir );
+  }  
+  my $db = $self->logdb;
   my $dbh = DBI->connect(          
-      "dbi:SQLite:dbname=$sqlite3path", 
+      "dbi:SQLite:dbname=$db", 
       "",                          
       "",                          
       { RaiseError => 1, AutoCommit => 0},         
@@ -99,42 +111,6 @@ sub log{
   return 1;    
 }
 
-=head2 dev_log()
-  
-Creates a logging database for tracking development of scripts
-
-=cut
-
-sub dev_log{
-  my $self = shift;
-  my $sqlite3path = $self->logpath.'Chromicon\\DevLog.db';
-  my $dbh = DBI->connect(          
-      "dbi:SQLite:dbname=$sqlite3path", 
-      "",                          
-      "",                          
-      { RaiseError => 1, AutoCommit => 0},         
-  ) or die print $DBI::errstr;
-  
-  my $primary_key = 'PRIMARY KEY (Script, Date, Time, Keyword)';
-  $dbh->do("CREATE TABLE IF NOT EXISTS LOG(
-    Script    TEXT,
-    Keyword   TEXT, 
-    Status    TEXT, 
-    Comment   TEXT, 
-    Errmsg    TEXT,
-    Date      TEXT, 
-    Time      TEXT, 
-    User      TEXT,
-    $primary_key
-  )");
-    
-  my $sth = $dbh->prepare("INSERT INTO LOG VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )");
-  my @values = ($self->script, $self->keyword, $self->status, $self->comment, $self->errmsg, $self->date, $self->time, $self->user );
-  $sth->execute(@values) or die return $sth->errstr;
-  $dbh->commit;  
-  $dbh->disconnect();
-  return 1;    
-}
 
 =head2 log_hash
 
@@ -144,18 +120,24 @@ Return a hash of all logs within the Sqlite database
 
 sub log_hash{
   my $self = shift;
-  my $sqlite3path = $self->logpath.'Chromicon\\Log.db';
-  print "connecting for find\n";
+  if ( $defaultdb ne $self->logpath ) {
+    mkdir ($self->logpath) if ( ! -d $self->logpath ) ;
+  }
+  else{  
+    mkdir ($defaultdb_dir) if ( ! -d $defaultdb_dir );
+  }
+  my $db = $self->logdb;
   my $dbh = DBI->connect(          
-      "dbi:SQLite:dbname=$sqlite3path", 
+      "dbi:SQLite:dbname=$db", 
       "",                          
       "",                          
       { RaiseError => 1, AutoCommit => 0},         
   ) or die print $DBI::errstr;
-  print "preparing\n";
+  
   my $sth = $dbh->prepare("SELECT * FROM LOG");
   $sth->execute;
   my $hash_ref = $sth->fetchall_hashref( [ qw(Station Keyword Date Time) ]);
+  $dbh->disconnect();
   return $hash_ref;
 }
 
@@ -165,9 +147,7 @@ Sholto Maud, C<< <sholto.maud at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-logger at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Logger>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs in the issues wiki.
 
 
 =head1 SUPPORT
