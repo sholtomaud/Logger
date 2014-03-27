@@ -30,14 +30,17 @@ Code snippet.
   use Logger;
   
   my $logger = Logger->new( 
-    logpath=> $log_path,
-    station => $site,
-    date    => substr (NowString(), 0, 8 ),
-    time    => substr (NowString(), 8, 6 ),
+    logpath => $log_path, #defaults to current directory of script \\db
+    logdb   => $log_db, #defaults to 'Log.db'
+    station => $site, #required
+    date    => $current_date, #defaults to current date
+    time    => $current_time, #defaults to current time
     comment => $comment,
     status  => $status,
-    keyword => $keyword,
-    errmsg  => $errmsg
+    keyword => $keyword, #required
+    errmsg  => $errmsg, #required
+    script  => $script_name,
+    user    => $user_name # defaults to $ENV{'USERNAME'}
   );
 
   $logger->log;
@@ -60,9 +63,8 @@ Code snippet.
   
 =head1 EXPORTS
 
-  > log()
-  > log_hash()
-  > dev_log()
+* log()
+* log_hash()
 
 =head1 SUBROUTINES/METHODS
 
@@ -154,9 +156,6 @@ Please report any bugs in the issues wiki.
 You can find documentation for this module with the perldoc command.
 
     perldoc Logger
-
-
-You can also look for information at:
 
 =over 4
 
