@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-use Test::More tests => 3;
+use Test::More tests => 5;
 use Logger;
 use FindBin qw($Bin);
 use File::Path 'rmtree';
@@ -26,10 +26,12 @@ use File::Path 'rmtree';
     user    => 'USER'
   );
 
+  my $file = $logpath.'\\'.$logdb;
+  
 ok(defined $logger, 'Logger->new() returned something' );
 ok($logger->log  , 'log()');
 ok($logger->log_hash  , 'dev_log()');
+ok(unlink $file,'unlinking file [$file]');
+ok(rmdir $logpath,'rmdir temp [$logpath]');
 
-my $file = $logpath.'\\'.$logdb;
-unlink  $file or warn "Could not unlink $file";
-rmdir $logpath;
+#unlink  $file or warn "Could not unlink $file";
