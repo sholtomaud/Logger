@@ -33,5 +33,3 @@ ok($logger->log  , 'log()');
 ok($logger->log_hash  , 'dev_log()');
 ok(unlink $file,'unlinking file [$file]');
 ok(rmdir $logpath,'rmdir temp [$logpath]');
-
-#unlink  $file or warn "Could not unlink $file";
