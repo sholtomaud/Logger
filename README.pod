@@ -62,22 +62,6 @@ You can find documentation for this module with the perldoc command.
 
 =over 4
 
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Logger>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Logger>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Logger>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Logger/>
-
 =back
 
 
