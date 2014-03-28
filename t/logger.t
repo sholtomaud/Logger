@@ -2,7 +2,6 @@
 use Test::More tests => 5;
 use Logger;
 use FindBin qw($Bin);
-use File::Path 'rmtree';
 
   my $site    = 'testsite';
   my $comment = 'imported somethink';
