@@ -2,6 +2,7 @@
 package Logger;
 use Moose;
 #use Moose::Util::TypeConstraints;
+use 5.006;
 use DBI;
 use JSON;
 use DateTime;
